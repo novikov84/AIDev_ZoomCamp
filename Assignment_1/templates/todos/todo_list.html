@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}TODOs{% endblock %}
+{% block content %}
+<div class="row wrap" style="justify-content: space-between; gap: 10px; align-items: center;">
+    <h2 style="margin: 0;">Your TODOs</h2>
+    <a class="btn btn-primary" href="{% url 'todos:create' %}">+ New TODO</a>
+</div>
+<div class="divider"></div>
+
+{% if todos %}
+    <div class="list">
+        {% for todo in todos %}
+            <div class="item {% if todo.completed %}completed{% endif %}">
+                <div>
+                    <div class="row wrap" style="gap: 10px; align-items: center;">
+                        <strong>{{ todo.title }}</strong>
+                        <span class="pill {% if todo.completed %}complete{% else %}pending{% endif %}">
+                            {% if todo.completed %}Resolved{% else %}Open{% endif %}
+                        </span>
+                        {% if todo.due_date %}
+                            <span class="pill">Due {{ todo.due_date }}</span>
+                        {% endif %}
+                    </div>
+                    {% if todo.description %}
+                        <div class="meta">{{ todo.description }}</div>
+                    {% endif %}
+                </div>
+                <div class="actions">
+                    <form method="post" action="{% url 'todos:toggle' todo.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button class="btn btn-primary" type="submit">
+                            {% if todo.completed %}Mark Open{% else %}Mark Resolved{% endif %}
+                        </button>
+                    </form>
+                    <a class="btn btn-ghost" href="{% url 'todos:edit' todo.pk %}">Edit</a>
+                    <a class="btn btn-danger" href="{% url 'todos:delete' todo.pk %}">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="muted">No TODOs yet. Create one to get started.</p>
+{% endif %}
+{% endblock %}

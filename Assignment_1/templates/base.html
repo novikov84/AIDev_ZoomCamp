@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TODOs{% endblock %}</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111827;
+            --accent: #22c55e;
+            --accent-strong: #16a34a;
+            --muted: #9ca3af;
+            --text: #f8fafc;
+            --border: #1f2937;
+            --danger: #ef4444;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at 20% 20%, rgba(34,197,94,0.08), transparent 25%),
+                        radial-gradient(circle at 80% 0%, rgba(59,130,246,0.08), transparent 20%),
+                        var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        header {
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: 0.4px;
+            box-shadow: 0 10px 30px rgba(34,197,94,0.25);
+        }
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 18px 60px rgba(0,0,0,0.2);
+        }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--accent-strong); }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #0b1224;
+            color: var(--text);
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.2s ease, color 0.2s ease;
+            font-weight: 600;
+        }
+        .btn:hover { background: #0d1428; transform: translateY(-1px); }
+        .btn-primary { background: var(--accent); color: #0f172a; border-color: transparent; }
+        .btn-primary:hover { background: var(--accent-strong); }
+        .btn-ghost { background: transparent; }
+        .btn-danger { background: transparent; color: var(--danger); border-color: #ef444430; }
+        .btn-danger:hover { background: #ef444410; }
+        form { margin: 0; }
+        .divider { border-top: 1px solid var(--border); margin: 16px 0; }
+        .muted { color: var(--muted); }
+        .list { display: flex; flex-direction: column; gap: 12px; margin: 16px 0 0; }
+        .item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            align-items: center;
+            background: #0c1223;
+        }
+        .item.completed {
+            opacity: 0.7;
+            background: #0b1420;
+        }
+        .pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            border: 1px solid var(--border);
+        }
+        .pill.complete { background: #22c55e20; color: #34d399; border-color: #22c55e40; }
+        .pill.pending { background: #f59e0b20; color: #fbbf24; border-color: #f59e0b40; }
+        .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+        .meta { font-size: 13px; color: var(--muted); margin-top: 4px; }
+        .form-grid { display: grid; gap: 12px; }
+        label { font-weight: 600; margin-bottom: 4px; display: block; }
+        input[type="text"], input[type="date"], textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #0b1020;
+            color: var(--text);
+        }
+        textarea { resize: vertical; min-height: 90px; }
+        input[type="checkbox"] { transform: scale(1.2); }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .row { display: flex; gap: 12px; align-items: center; }
+        .row.wrap { flex-wrap: wrap; }
+        .errorlist { color: #f87171; margin: 0; padding-left: 18px; }
+        @media (max-width: 640px) {
+            .item { grid-template-columns: 1fr; }
+            .actions { justify-content: flex-start; }
+            header { padding: 18px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">TD</div>
+        <div>
+            <div class="title">Django TODOs</div>
+            <div class="muted">Track tasks, due dates, and resolutions</div>
+        </div>
+    </header>
+    <main>
+        <div class="card">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</body>
+</html>
