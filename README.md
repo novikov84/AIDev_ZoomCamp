@@ -17,9 +17,6 @@
 ### Tests
 - Run: `python manage.py test`
 
-### Git note
-Conda caches are ignored via `.gitignore` (`Assignment_1/.conda_pkgs/`). If push fails due to previously committed large files, purge them from git history (e.g., `git filter-repo` or GitHub’s BFG instructions) before pushing.
-
 ## Screenshot
 
 ![Django TODOs](Assignment_1/assets/todo-screenshot.png)
