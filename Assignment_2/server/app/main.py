@@ -1,14 +1,19 @@
 import os
+from pathlib import Path
 from typing import Any, Dict
 from uuid import uuid4
 
 import socketio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 ROOM_STATE: Dict[str, Dict[str, Any]] = {}
 
 origins = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
+BASE_DIR = Path(__file__).resolve().parent.parent
+DIST_DIR = BASE_DIR / "dist"
 
 sio = socketio.AsyncServer(
     async_mode="asgi",
@@ -80,6 +85,18 @@ async def language_change(sid, data):
         return
     ROOM_STATE.setdefault(room, {})["language"] = language
     await sio.emit("language_update", {"language": language}, room=room, skip_sid=sid)
+
+
+if DIST_DIR.exists():
+    # Serve the built Vite app in production/Docker
+    app.mount("/assets", StaticFiles(directory=DIST_DIR / "assets"), name="assets")
+
+    @app.get("/", response_class=HTMLResponse)
+    async def serve_index() -> str:
+        index_file = DIST_DIR / "index.html"
+        if index_file.exists():
+            return index_file.read_text(encoding="utf-8")
+        return "<h1>Build not found</h1>"
 
 
 application = socketio.ASGIApp(sio, other_asgi_app=app)

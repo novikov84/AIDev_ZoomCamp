@@ -10,7 +10,7 @@ dependencies = [
     "python-engineio>=4.9.1",
     "httpx>=0.26.0",
     "pytest>=8.2.0",
-    "pytest-asyncio>=0.21.1",
+    "pytest-asyncio>=0.23.6",
 ]
 
 [build-system]

@@ -99,22 +99,50 @@ function App() {
   };
 
   const runJs = () => {
+    const logs = [];
+    const originalConsole = window.console;
+    // Capture console output while still emitting to the real console
+    const patchedConsole = {
+      ...originalConsole,
+      log: (...args) => {
+        logs.push(args.map((x) => String(x)).join(" "));
+        originalConsole.log(...args);
+      }
+    };
     try {
+      // eslint-disable-next-line no-global-assign
+      console = patchedConsole;
       // eslint-disable-next-line no-new-func
       const result = new Function(code)();
-      setOutput(String(result ?? "done"));
+      const resultText = result !== undefined ? String(result) : "";
+      const combined = [...logs, resultText || "done"].filter(Boolean).join("\n");
+      setOutput(combined);
     } catch (err) {
       setOutput(`JS error: ${err.message}`);
+    } finally {
+      // eslint-disable-next-line no-global-assign
+      console = originalConsole;
     }
   };
 
   const runPython = async () => {
     try {
       const pyodide = await ensurePyodide();
+      let buf = "";
+      const capture = { batched: (s) => { buf += s; } };
+      pyodide.setStdout(capture);
+      pyodide.setStderr(capture);
       const result = await pyodide.runPythonAsync(code);
-      setOutput(String(result ?? "done"));
+      const resultText = result !== undefined ? String(result) : "";
+      const combined = [buf.trim(), resultText || "done"].filter(Boolean).join("\n");
+      setOutput(combined);
     } catch (err) {
       setOutput(`Python error: ${err.message}`);
+    } finally {
+      if (pyodideRef.current) {
+        pyodideRef.current.setStdout();
+        pyodideRef.current.setStderr();
+      }
     }
   };
 
