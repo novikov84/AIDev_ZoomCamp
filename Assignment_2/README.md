@@ -50,7 +50,7 @@ Deliver the code in `Assignment_2/client` and `Assignment_2/server` folders with
 - Env vars:
   - `CORS_ORIGINS`: `https://your-app.onrender.com,http://localhost:8000`
   - `PORT`: `8000` (Render usually sets this automatically)
-  - `VITE_API_URL`: not needed when frontend is served by the same container (defaults to same-origin).
+  - `VITE_API_URL`: optional; defaults to same-origin in the client build. Set to your Render URL if you want to be explicit (e.g., `https://your-app.onrender.com`).
 Make sure CORS origins match your Render URL.
 
 ## Notes
