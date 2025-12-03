@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: Assignment_2/Dockerfile
+      args:
+        APP_DIR: Assignment_2
+    environment:
+      - PORT=8000
+      - CORS_ORIGINS=http://localhost:8000
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"

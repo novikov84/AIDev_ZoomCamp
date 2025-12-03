@@ -66,3 +66,38 @@ async def test_socket_join_and_sync(live_server):
 
     await client_a.disconnect()
     await client_b.disconnect()
+
+
+@pytest.mark.asyncio
+async def test_state_sync_on_join(live_server):
+    base_url = live_server
+
+    async with httpx.AsyncClient(base_url=base_url) as client:
+        resp = await client.post("/api/session")
+        resp.raise_for_status()
+        session_id = resp.json()["sessionId"]
+
+    client_a = socketio.AsyncClient()
+    client_b = socketio.AsyncClient()
+
+    state_sync_received = asyncio.Event()
+    state_payload = {}
+
+    @client_b.on("state_sync")
+    async def on_state_sync(data):
+        state_payload.update(data or {})
+        state_sync_received.set()
+
+    await client_a.connect(base_url, socketio_path="socket.io")
+    await client_b.connect(base_url, socketio_path="socket.io")
+
+    await client_a.emit("join", {"room": session_id})
+    await client_a.emit("code_change", {"room": session_id, "code": "shared-code"})
+
+    await client_b.emit("join", {"room": session_id})
+    await asyncio.wait_for(state_sync_received.wait(), timeout=5)
+
+    assert state_payload.get("code") == "shared-code"
+
+    await client_a.disconnect()
+    await client_b.disconnect()

@@ -44,13 +44,17 @@ Deliver the code in `Assignment_2/client` and `Assignment_2/server` folders with
   - If building from inside `Assignment_2/`, pass `--build-arg APP_DIR=.`: `docker build --build-arg APP_DIR=. -t coding-interview .`
 - Run: `docker run -p 8000:8000 coding-interview`
 - The backend serves the built frontend from `server/dist` when present (Docker image does this by default).
+- With Redis (recommended for multi-client sync): use `docker-compose.yml` from `Assignment_2/`:
+  - `cd Assignment_2 && docker-compose up --build`
+  - This starts Redis and the app with `REDIS_URL=redis://redis:6379` and `CORS_ORIGINS=http://localhost:8000`.
 
 ## Render
 - Example `render.yaml` included for Docker deploy (ensure it points to `Assignment_2/Dockerfile` or configure manually in the dashboard).
 - Env vars:
-  - `CORS_ORIGINS`: `https://your-app.onrender.com,http://localhost:8000`
+  - `CORS_ORIGINS`: your Render URL(s), comma-separated (e.g., `https://your-app.onrender.com`)
   - `PORT`: `8000` (Render usually sets this automatically)
   - `VITE_API_URL`: optional; defaults to same-origin in the client build. Set to your Render URL if you want to be explicit (e.g., `https://your-app.onrender.com`).
+  - `REDIS_URL`: Redis connection string to share Socket.IO events and room state across instances.
 Make sure CORS origins match your Render URL.
 
 ## Notes

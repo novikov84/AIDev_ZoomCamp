@@ -8,4 +8,6 @@ services:
       - key: PORT
         value: 8000
       - key: CORS_ORIGINS
-        value: "https://vncode.onrender.com,http://localhost:5173"
+        value: "https://vncode.onrender.com"
+      - key: REDIS_URL
+        sync: false
