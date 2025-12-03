@@ -1,8 +1,8 @@
 # Multi-stage build: build frontend with Node, then serve via FastAPI app on python:3.11-slim
 
 ARG APP_DIR=Assignment_2
-
 FROM node:18-alpine AS client-build
+ARG APP_DIR
 WORKDIR /app/client
 COPY ${APP_DIR}/client/package.json ${APP_DIR}/client/package-lock.json* ./ 
 RUN npm install
@@ -10,6 +10,7 @@ COPY ${APP_DIR}/client/ ./
 RUN npm run build
 
 FROM python:3.11-slim AS runtime
+ARG APP_DIR
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
