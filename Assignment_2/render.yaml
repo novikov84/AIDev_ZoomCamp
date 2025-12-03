@@ -10,4 +10,4 @@ services:
       - key: CORS_ORIGINS
         value: "https://vncode.onrender.com"
       - key: REDIS_URL
-        sync: false
+        value: "redis://red-d4o9bn24d50c738ou080:6379"
