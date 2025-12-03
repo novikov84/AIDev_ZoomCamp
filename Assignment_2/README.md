@@ -40,13 +40,18 @@ Deliver the code in `Assignment_2/client` and `Assignment_2/server` folders with
 - Note: socket integration test is skipped automatically if the environment cannot bind a localhost test port.
 
 ## Docker
-- Build: `docker build -t coding-interview .`
+- Build from repo root: `docker build -f Assignment_2/Dockerfile -t coding-interview .`
+  - If building from inside `Assignment_2/`, pass `--build-arg APP_DIR=.`: `docker build --build-arg APP_DIR=. -t coding-interview .`
 - Run: `docker run -p 8000:8000 coding-interview`
 - The backend serves the built frontend from `server/dist` when present (Docker image does this by default).
 
 ## Render
-- Example `render.yaml` included for Docker deploy. Make sure CORS origins match your Render URL.
-- Set `CORS_ORIGINS` env to include your Render app URL (e.g., `https://your-app.onrender.com,http://localhost:8000`).
+- Example `render.yaml` included for Docker deploy (ensure it points to `Assignment_2/Dockerfile` or configure manually in the dashboard).
+- Env vars:
+  - `CORS_ORIGINS`: `https://your-app.onrender.com,http://localhost:8000`
+  - `PORT`: `8000` (Render usually sets this automatically)
+  - `VITE_API_URL`: not needed when frontend is served by the same container (defaults to same-origin).
+Make sure CORS origins match your Render URL.
 
 ## Notes
 - Follow AI Dev Tools Zoomcamp (02-end-to-end) patterns for README commands, dev scripts, testing, Docker, and Render deploy.

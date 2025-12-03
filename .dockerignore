@@ -1,0 +1,13 @@
+# Global dockerignore (root context)
+**/node_modules
+**/.npm
+**/.npm-cache
+**/dist
+**/.pytest_cache
+**/__pycache__
+*.pyc
+*.log
+.DS_Store
+env
+venv
+.venv
