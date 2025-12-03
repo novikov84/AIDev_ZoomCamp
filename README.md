@@ -1,28 +1,4 @@
 # AIDev_ZoomCamp
 
-## Assignment_1: Django TODO app
-
-### Setup
-1) Create env (if using conda): `conda create -n django python=3.11 django`
-2) Activate (if using conda): `conda activate django`
-3) From `Assignment_1/`:
-   - Run migrations: `python manage.py migrate`
-   - Start server: `python manage.py runserver`
-
-### App features
-- Create, edit, delete TODOs
-- Due dates and completion toggle
-- Basic styling and admin registration
-
-### Tests
-- Run: `python manage.py test`
-
-## Screenshot
-
-![Django TODOs](Assignment_1/assets/todo-screenshot.png)
-
-## Assignment_2: Collaborative coding interview platform
-- Backend: FastAPI + Socket.IO (Python 3.11)
-- Frontend: React + Vite + Monaco, Pyodide for Python execution
-- Realtime editing, browser-only code execution, Render deployment (planned)
-- See `Assignment_2/README.md` for setup, commands, and homework answers
+- **Assignment_1 – Django TODO app**: CRUD todos with due dates/completion toggle. Setup/tests and screenshot in `Assignment_1/README.md`.
+- **Assignment_2 – Collaborative coding interview platform**: FastAPI + Socket.IO backend; React + Vite + Monaco frontend with Pyodide execution; realtime editing; Docker/Render ready. See `Assignment_2/README.md` for commands, tests, and homework answers.

@@ -37,6 +37,7 @@ Deliver the code in `Assignment_2/client` and `Assignment_2/server` folders with
 - Install frontend deps (from `Assignment_2/client`): `npm install`
 - Dev server: from `Assignment_2/`, `npm run dev` (starts Vite + uvicorn)
 - Tests: from `Assignment_2/`, `npm run test`
+- Note: socket integration test is skipped automatically if the environment cannot bind a localhost test port.
 
 ## Docker
 - Build: `docker build -t coding-interview .`
@@ -45,6 +46,7 @@ Deliver the code in `Assignment_2/client` and `Assignment_2/server` folders with
 
 ## Render
 - Example `render.yaml` included for Docker deploy. Make sure CORS origins match your Render URL.
+- Set `CORS_ORIGINS` env to include your Render app URL (e.g., `https://your-app.onrender.com,http://localhost:8000`).
 
 ## Notes
 - Follow AI Dev Tools Zoomcamp (02-end-to-end) patterns for README commands, dev scripts, testing, Docker, and Render deploy.
