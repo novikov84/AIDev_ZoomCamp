@@ -20,3 +20,9 @@
 ## Screenshot
 
 ![Django TODOs](Assignment_1/assets/todo-screenshot.png)
+
+## Assignment_2: Collaborative coding interview platform
+- Backend: FastAPI + Socket.IO (Python 3.11)
+- Frontend: React + Vite + Monaco, Pyodide for Python execution
+- Realtime editing, browser-only code execution, Render deployment (planned)
+- See `Assignment_2/README.md` for setup, commands, and homework answers
