@@ -41,6 +41,7 @@ Deliver the code in `Assignment_2/client` and `Assignment_2/server` folders with
 ## Docker
 - Build: `docker build -t coding-interview .`
 - Run: `docker run -p 8000:8000 coding-interview`
+- The backend serves the built frontend from `server/dist` when present (Docker image does this by default).
 
 ## Render
 - Example `render.yaml` included for Docker deploy. Make sure CORS origins match your Render URL.

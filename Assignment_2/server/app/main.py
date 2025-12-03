@@ -11,7 +11,13 @@ from fastapi.staticfiles import StaticFiles
 
 ROOM_STATE: Dict[str, Dict[str, Any]] = {}
 
-origins = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
+default_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+origins = os.getenv("CORS_ORIGINS", ",".join(default_origins)).split(",")
 BASE_DIR = Path(__file__).resolve().parent.parent
 DIST_DIR = BASE_DIR / "dist"
 
@@ -26,7 +32,7 @@ app = FastAPI(title="Coding Interview Backend")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins + ["*"],  # relaxed for dev/demo
+    allow_origins=origins + ["*"],  # relaxed for dev/demo and Docker same-origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
