@@ -10,4 +10,4 @@ services:
       - key: CORS_ORIGINS
         value: "https://vncode.onrender.com"
       - key: REDIS_URL
-        value: "redis://red-d4o9bn24d50c738ou080:6379"
+        value: "rediss://default:AawoAAIncDJhZjhmYWFiMzI2YTY0M2JlOTBjMzFiNGE2NzA2MzlmYnAyNDQwNzI@concrete-opossum-44072.upstash.io:6379"
