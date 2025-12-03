@@ -26,8 +26,28 @@ REDIS_URL = os.getenv("REDIS_URL")
 redis_client: Optional[redis.Redis] = None
 client_manager = None
 if REDIS_URL:
+    print(f"[boot] Using Redis at {REDIS_URL}")
     redis_client = redis.from_url(REDIS_URL, decode_responses=True)
     client_manager = socketio.AsyncRedisManager(REDIS_URL)
+    try:
+        import asyncio
+
+        async def _ping():
+            try:
+                await redis_client.ping()
+                print("[boot] Redis ping ok")
+            except Exception as exc:  # pragma: no cover - diagnostic
+                print(f"[boot] Redis ping failed: {exc}")
+
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            loop.create_task(_ping())
+        else:
+            loop.run_until_complete(_ping())
+    except Exception as exc:  # pragma: no cover - diagnostic
+        print(f"[boot] Redis init error: {exc}")
+else:
+    print("[boot] REDIS_URL not set; using in-memory state (single instance only)")
 
 sio = socketio.AsyncServer(
     async_mode="asgi",
