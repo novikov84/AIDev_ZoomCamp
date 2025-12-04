@@ -3,13 +3,17 @@ import Editor from "@monaco-editor/react";
 import { io } from "socket.io-client";
 
 const API_URL = import.meta.env.VITE_API_URL || window.location.origin;
+const INITIAL_SNIPPETS = {
+  python: "# Start coding\n",
+  javascript: "// Start coding\n"
+};
 
 function App() {
   const [sessionId, setSessionId] = useState(
     new URLSearchParams(window.location.search).get("room") || ""
   );
-  const [code, setCode] = useState("// Start coding\n");
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState("python");
+  const [code, setCode] = useState(INITIAL_SNIPPETS.python);
   const [output, setOutput] = useState("Ready.");
   const [pyLoading, setPyLoading] = useState(false);
   const socketRef = useRef(null);
@@ -78,10 +82,17 @@ function App() {
   };
 
   const onLanguageChange = (value) => {
-    setLanguage(value);
-    if (socketRef.current && sessionId) {
-      socketRef.current.emit("language_change", { room: sessionId, language: value });
-    }
+    setLanguage((prevLang) => {
+      const newLang = value;
+      // If code is still at the untouched template for the previous language, swap to new template.
+      if (code === INITIAL_SNIPPETS[prevLang]) {
+        setCode(INITIAL_SNIPPETS[newLang]);
+      }
+      if (socketRef.current && sessionId) {
+        socketRef.current.emit("language_change", { room: sessionId, language: newLang });
+      }
+      return newLang;
+    });
   };
 
   const ensurePyodide = async () => {
@@ -134,7 +145,7 @@ function App() {
       pyodide.setStderr(capture);
       const result = await pyodide.runPythonAsync(code);
       const resultText = result !== undefined ? String(result) : "";
-      const combined = [buf.trim(), resultText || "done"].filter(Boolean).join("\n");
+      const combined = [buf, resultText || "done"].filter((part) => part !== "").join("\n");
       setOutput(combined);
     } catch (err) {
       setOutput(`Python error: ${err.message}`);

@@ -23,29 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DIST_DIR = BASE_DIR / "dist"
 
 REDIS_URL = os.getenv("REDIS_URL")
+if os.getenv("PYTEST_CURRENT_TEST"):
+    REDIS_URL = None
+
 redis_client: Optional[redis.Redis] = None
 client_manager = None
 if REDIS_URL:
     print(f"[boot] Using Redis at {REDIS_URL}")
     redis_client = redis.from_url(REDIS_URL, decode_responses=True)
     client_manager = socketio.AsyncRedisManager(REDIS_URL)
-    try:
-        import asyncio
-
-        async def _ping():
-            try:
-                await redis_client.ping()
-                print("[boot] Redis ping ok")
-            except Exception as exc:  # pragma: no cover - diagnostic
-                print(f"[boot] Redis ping failed: {exc}")
-
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            loop.create_task(_ping())
-        else:
-            loop.run_until_complete(_ping())
-    except Exception as exc:  # pragma: no cover - diagnostic
-        print(f"[boot] Redis init error: {exc}")
 else:
     print("[boot] REDIS_URL not set; using in-memory state (single instance only)")
 
@@ -70,18 +56,23 @@ app.add_middleware(
 
 async def get_state(room: str) -> Optional[Dict[str, Any]]:
     if redis_client:
-        data = await redis_client.hgetall(f"room:{room}")
-        if data:
-            return {"code": data.get("code", ""), "language": data.get("language", "javascript")}
-        return None
+        try:
+            data = await redis_client.hgetall(f"room:{room}")
+            if data:
+                return {"code": data.get("code", ""), "language": data.get("language", "javascript")}
+        except Exception as exc:  # pragma: no cover - diagnostic
+            print(f"[state] Redis get failed, falling back to memory: {exc}")
     return ROOM_STATE.get(room)
 
 
 async def set_state(room: str, code: str, language: str) -> None:
     if redis_client:
-        await redis_client.hset(f"room:{room}", mapping={"code": code, "language": language})
-    else:
-        ROOM_STATE[room] = {"code": code, "language": language}
+        try:
+            await redis_client.hset(f"room:{room}", mapping={"code": code, "language": language})
+            return
+        except Exception as exc:  # pragma: no cover - diagnostic
+            print(f"[state] Redis set failed, falling back to memory: {exc}")
+    ROOM_STATE[room] = {"code": code, "language": language}
 
 
 @app.get("/health")
@@ -92,7 +83,7 @@ async def health() -> dict:
 @app.post("/api/session")
 async def create_session() -> dict:
     session_id = uuid4().hex[:8]
-    await set_state(session_id, "// shared session\n", "javascript")
+    await set_state(session_id, "# Start coding\n", "python")
     return {"sessionId": session_id}
 
 

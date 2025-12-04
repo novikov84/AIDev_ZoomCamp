@@ -10,7 +10,7 @@
 ## Homework answers tracker
 - Q1 initial prompt: see next section (copy/paste to homework form).
 - Q2 test command: `npm run test` (runs `pytest` in `Assignment_2/server`).
-- Q3 npm dev command: `npm run dev` (concurrently Vite + uvicorn).
+- Q3 npm dev command: `concurrently "npm --prefix client run dev" "cd server && uvicorn app.main:application --reload --host 0.0.0.0 --port 8000"`
 - Q4 syntax highlighting library: Monaco editor.
 - Q5 Python→WASM library: Pyodide.
 - Q6 Docker base image: `python:3.11-slim`.
@@ -36,6 +36,7 @@ Deliver the code in `Assignment_2/client` and `Assignment_2/server` folders with
 - Install Python deps (from `Assignment_2/server`): `uv pip install -r requirements.txt`
 - Install frontend deps (from `Assignment_2/client`): `npm install`
 - Dev server: from `Assignment_2/`, `npm run dev` (starts Vite + uvicorn)
+- Dev command detail: `concurrently "npm --prefix client run dev" "cd server && uvicorn app.main:application --reload --host 0.0.0.0 --port 8000"`
 - Tests: from `Assignment_2/`, `npm run test`
 - Note: socket integration test is skipped automatically if the environment cannot bind a localhost test port.
 

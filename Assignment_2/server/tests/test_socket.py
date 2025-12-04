@@ -7,6 +7,8 @@ import pytest_asyncio
 import socketio
 import uvicorn
 
+pytest.importorskip("aiohttp", reason="aiohttp required for socket.io test client")
+
 from app.main import application
 
 
@@ -53,8 +55,8 @@ async def test_socket_join_and_sync(live_server):
         payload.update(data or {})
         received.set()
 
-    await client_a.connect(base_url, socketio_path="socket.io")
-    await client_b.connect(base_url, socketio_path="socket.io")
+    await client_a.connect(base_url, socketio_path="socket.io", transports=["websocket"])
+    await client_b.connect(base_url, socketio_path="socket.io", transports=["websocket"])
 
     await client_a.emit("join", {"room": session_id})
     await client_b.emit("join", {"room": session_id})
@@ -88,8 +90,8 @@ async def test_state_sync_on_join(live_server):
         state_payload.update(data or {})
         state_sync_received.set()
 
-    await client_a.connect(base_url, socketio_path="socket.io")
-    await client_b.connect(base_url, socketio_path="socket.io")
+    await client_a.connect(base_url, socketio_path="socket.io", transports=["websocket"])
+    await client_b.connect(base_url, socketio_path="socket.io", transports=["websocket"])
 
     await client_a.emit("join", {"room": session_id})
     await client_a.emit("code_change", {"room": session_id, "code": "shared-code"})
