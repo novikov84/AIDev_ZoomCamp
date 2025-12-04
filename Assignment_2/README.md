@@ -1,5 +1,7 @@
 # Assignment 2: Collaborative Coding Interview Platform (planning)
 
+Live demo: https://vncode.onrender.com
+
 ## Tech choices
 - Frontend: React + Vite with Monaco editor (JS/Python highlighting), Socket.IO client.
 - Backend: FastAPI + python-socketio (ASGI), Python 3.11 (conda env), `uv` for deps.
@@ -55,7 +57,7 @@ Deliver the code in `Assignment_2/client` and `Assignment_2/server` folders with
   - `CORS_ORIGINS`: your Render URL(s), comma-separated (e.g., `https://your-app.onrender.com`)
   - `PORT`: `8000` (Render usually sets this automatically)
   - `VITE_API_URL`: optional; defaults to same-origin in the client build. Set to your Render URL if you want to be explicit (e.g., `https://your-app.onrender.com`).
-  - `REDIS_URL`: Redis connection string to share Socket.IO events and room state across instances.
+  - `REDIS_URL`: Redis connection string to share Socket.IO events and room state across instances. In production we use Upstash (rediss://...).
 Make sure CORS origins match your Render URL.
 
 ## Notes
